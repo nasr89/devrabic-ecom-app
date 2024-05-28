@@ -1,13 +1,22 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { getFrontendErrorMessage, signInUser } from 'utils/firebaseFunctions'
 
 function LogInForm() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState(null)
+  const navigate = useNavigate()
 
-  const navigate = useNavigate();
-
-  const handleLogin = async (e) => {};
+  const handleLogin = async (e) => {
+    e.preventDefault()
+    const res = await signInUser(email, password)
+    if (res.succes) {
+      navigate('/')
+    } else {
+      setError(getFrontendErrorMessage(res.error))
+    }
+  }
 
   return (
     <form onSubmit={handleLogin} className="form">
@@ -40,11 +49,15 @@ function LogInForm() {
           placeholder="Enter your password"
         />
       </div>
-
+      {error && (
+        <div className="form__group">
+          <div className="form__error">{error}</div>
+        </div>
+      )}
       <button className="form__button primary" type="submit">
         Log in
       </button>
     </form>
-  );
+  )
 }
-export default LogInForm;
+export default LogInForm
