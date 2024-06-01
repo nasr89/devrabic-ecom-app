@@ -1,38 +1,38 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { getFrontendErrorMessage, registerUser } from 'utils/firebaseFunctions'
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { getFrontendErrorMessage, registerUser } from "utils/firebaseFunctions";
 
 function RegisterForm() {
   const [inputs, setInputs] = useState({
-    username: '',
-    email: '',
-    password: '',
-  })
+    username: "",
+    email: "",
+    password: "",
+  });
 
-  const [error, setError] = useState(null)
-  const navigate = useNavigate()
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target
+    const { name, value } = e.target;
     setInputs({
       ...inputs,
       [name]: value,
-    })
-  }
+    });
+  };
 
   const handleRegister = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     const res = await registerUser(
       inputs.username,
       inputs.email,
       inputs.password
-    )
-    if(res.succes){
-      navigate('/');
-    }else{
+    );
+    if (res.succes) {
+      navigate("/");
+    } else {
       setError(getFrontendErrorMessage(res.error));
     }
-  }
+  };
 
   return (
     <form onSubmit={handleRegister} className="form">
@@ -79,11 +79,15 @@ function RegisterForm() {
           placeholder="Enter your password"
         />
       </div>
-
+      {error && (
+        <div className="form__group">
+          <div className="form__error">{error}</div>
+        </div>
+      )}
       <button className="form__button primary" type="submit">
         Register
       </button>
     </form>
-  )
+  );
 }
-export default RegisterForm
+export default RegisterForm;
